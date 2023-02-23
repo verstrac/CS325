@@ -1,42 +1,43 @@
+import heapq
+
+
+def calculate_distances(graph, starting_vertex):
+    distances = {vertex: float('infinity') for vertex in graph}
+    distances[starting_vertex] = 0
+
+    pq = [(0, starting_vertex)]
+    while len(pq) > 0:
+        current_distance, current_vertex = heapq.heappop(pq)
+
+        # Nodes can get added to the priority queue multiple times. We only
+        # process a vertex the first time we remove it from the priority queue.
+        if current_distance > distances[current_vertex]:
+            continue
+
+        for neighbor, weight in graph[current_vertex].items():
+            distance = current_distance + weight
+
+            # Only consider this new path if it's better than any path we've
+            # already found.
+            if distance < distances[neighbor]:
+                distances[neighbor] = distance
+                heapq.heappush(pq, (distance, neighbor))
+
+    return distances
+
+
+example_graph = {
+    'U': {'V': 2, 'W': 5, 'X': 1},
+    'V': {'U': 2, 'X': 2, 'W': 3},
+    'W': {'V': 3, 'U': 5, 'X': 3, 'Y': 1, 'Z': 5},
+    'X': {'U': 1, 'V': 2, 'W': 3, 'Y': 1},
+    'Y': {'X': 1, 'W': 1, 'Z': 1},
+    'Z': {'W': 5, 'Y': 1},
+}
+print(calculate_distances(example_graph, 'X'))
+# => {'U': 1, 'W': 2, 'V': 2, 'Y': 1, 'X': 0, 'Z': 2}
+
 '''
-Implement a function min_Lateness(assinnments)
-
-Sample value for assinnments = [("A",2,2),("B",3,4),("C",1,6),("D",5,7)]
-where A, B, C, D are name of assignments
-2,3,1,5 represent time timetaken by the assignment
-2,4,6,7 represent deadline
-
-Example:
-assinnments = [("A",2,2),("B",3,4),("C",1,6),("D",5,7)]
-(min_Lateness(assinnments))
-
-would return
-
-(4, ['A', 'B', 'C', 'D'])
-
-4 is the maximum min_Lateness
+Reference:
+source: https://bradfieldcs.com/algos/graphs/dijkstras-algorithm/
 '''
-
-def main():
-    print(min_lateness([("A", 2, 2), ("B", 3, 4), ("C", 1, 6), ("D", 5, 7)]))
-
-def min_lateness(assinnments):
-    sorted(assinnments, key=lambda assinnment: assinnment[2])
-
-    start_time = 0
-    max_lateness = 0
-    schedule = []
-    finish_time = 0
-
-    for assignment in assinnments:
-        finish_time = start_time + assignment[1]
-        if(finish_time > assignment[2]):
-            max_lateness = max(max_lateness, finish_time - assignment[2])
-        start_time = finish_time
-        schedule.append(assignment[0])
-
-    return max_lateness, schedule
-
-
-if __name__ == '__main__':
-    main()
