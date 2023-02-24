@@ -50,19 +50,21 @@ def checkLeft(current_pos, pq, puzzle, visited_nodes):
 
 
 def minEffort(puzzle):
-    pq = [(0, (0, 0), None)]
+    pq = [(0, (0, 0), None)] # starting queue
     min_effort = 0
     visited_nodes = []
 
     while True:
+        # Pop off current minimum effort path node
         move_effort, current_pos, previous_pos = heapq.heappop(pq)
         if current_pos not in visited_nodes:
             visited_nodes.append(current_pos)
         if move_effort > min_effort:
             min_effort = move_effort
-
+        # Reached target with the minimum effort returned
         if len(puzzle) - 1 == current_pos[0] and len(puzzle[0]) - 1 == current_pos[1]:
             return min_effort
+        # check neighbors except edge where we came from
         if previous_pos != 'DOWN':
             checkDown(current_pos, pq, puzzle, visited_nodes)
         if previous_pos != 'RIGHT':
