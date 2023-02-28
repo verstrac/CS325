@@ -1,43 +1,50 @@
-import heapq
+def prims(G):
+    # Prim's Algorithm in Python
 
 
-def calculate_distances(graph, starting_vertex):
-    distances = {vertex: float('infinity') for vertex in graph}
-    distances[starting_vertex] = 0
+    INF = 9999999
+    # number of vertices in graph
+    V = 5
+    # create a 2d array of size 5x5
+    # for adjacency matrix to represent graph
 
-    pq = [(0, starting_vertex)]
-    while len(pq) > 0:
-        current_distance, current_vertex = heapq.heappop(pq)
+    # create a array to track selected vertex
+    # selected will become true otherwise false
+    selected = [0, 0, 0, 0, 0]
+    # set number of edge to 0
+    no_edge = 0
+    # the number of egde in minimum spanning tree will be
+    # always less than(V - 1), where V is number of vertices in
+    # graph
+    # choose 0th vertex and make it true
+    selected[0] = True
+    # print for edge and weight
+    print("Edge : Weight\n")
+    while (no_edge < V - 1):
+        # For every vertex in the set S, find the all adjacent vertices
+        # , calculate the distance from the vertex selected at step 1.
+        # if the vertex is already in the set S, discard it otherwise
+        # choose another vertex nearest to selected vertex  at step 1.
+        minimum = INF
+        x = 0
+        y = 0
+        for i in range(V):
+            if selected[i]:
+                for j in range(V):
+                    if ((not selected[j]) and G[i][j]):
+                        # not in selected and there is an edge
+                        if minimum > G[i][j]:
+                            minimum = G[i][j]
+                            x = i
+                            y = j
+        print(str(x) + "-" + str(y) + ":" + str(G[x][y]))
+        selected[y] = True
+        no_edge += 1
 
-        # Nodes can get added to the priority queue multiple times. We only
-        # process a vertex the first time we remove it from the priority queue.
-        if current_distance > distances[current_vertex]:
-            continue
+G = [[0, 9, 75, 0, 0],
+         [9, 0, 95, 19, 42],
+         [75, 95, 0, 51, 66],
+         [0, 19, 51, 0, 31],
+         [0, 42, 66, 31, 0]]
 
-        for neighbor, weight in graph[current_vertex].items():
-            distance = current_distance + weight
-
-            # Only consider this new path if it's better than any path we've
-            # already found.
-            if distance < distances[neighbor]:
-                distances[neighbor] = distance
-                heapq.heappush(pq, (distance, neighbor))
-
-    return distances
-
-
-example_graph = {
-    'U': {'V': 2, 'W': 5, 'X': 1},
-    'V': {'U': 2, 'X': 2, 'W': 3},
-    'W': {'V': 3, 'U': 5, 'X': 3, 'Y': 1, 'Z': 5},
-    'X': {'U': 1, 'V': 2, 'W': 3, 'Y': 1},
-    'Y': {'X': 1, 'W': 1, 'Z': 1},
-    'Z': {'W': 5, 'Y': 1},
-}
-print(calculate_distances(example_graph, 'X'))
-# => {'U': 1, 'W': 2, 'V': 2, 'Y': 1, 'X': 0, 'Z': 2}
-
-'''
-Reference:
-source: https://bradfieldcs.com/algos/graphs/dijkstras-algorithm/
-'''
+prims(G)
