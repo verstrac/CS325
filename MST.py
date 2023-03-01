@@ -27,13 +27,17 @@ def Prims(G):
         if G[0][next_node]:
             heapq.heappush(pq, (G[0][next_node], next_node, 0))
 
-    while len(visited_nodes) < len(G):
+    while True:
         smallest_edge, current_node, previous_node = heapq.heappop(pq)
+        # Make sure not to create a cycle
         if current_node in visited_nodes and previous_node in visited_nodes:
             continue
         else:
             visited_nodes.append(current_node)
             mst.append((current_node, previous_node, smallest_edge))
+        # if all nodes in visited nodes break from the while loop
+        if len(visited_nodes) == len(G):
+            break
         # check current nodes edges and add them to the pq
         for next_node in range(len(G[current_node])):
             if G[current_node][next_node] and next_node not in visited_nodes:

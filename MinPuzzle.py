@@ -59,6 +59,8 @@ def minEffort(puzzle):
         move_effort, current_pos, previous_pos = heapq.heappop(pq)
         if current_pos not in visited_nodes:
             visited_nodes.append(current_pos)
+        else:
+            continue
         if move_effort > min_effort:
             min_effort = move_effort
         # Reached target with the minimum effort returned
