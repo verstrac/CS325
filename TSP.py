@@ -35,8 +35,9 @@ def solve_tsp(G):
                 nearest_neighbor = edge
         result.append(nearest_neighbor)
         current_neighbor = nearest_neighbor
-    # Add start node to result path and return result
-    result.append(0)
+    # Go from last node back to start
+    if G[current_neighbor][0] > 0:
+        result.append(0)
     return result
 
 
